@@ -72,6 +72,44 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000) to see your application running.
 
+## 🚀 Vercel Deployment
+
+This project is configured for easy deployment on Vercel. Follow these steps:
+
+### 1. Push to GitHub
+Make sure your code is pushed to a GitHub repository.
+
+### 2. Connect to Vercel
+1. Go to [vercel.com](https://vercel.com)
+2. Click "New Project"
+3. Connect your GitHub repository
+4. Select this project
+
+### 3. Environment Variables
+Add these environment variables in your Vercel project settings:
+```env
+DATABASE_URL=file:./dev.db
+ZAI_API_KEY=your_zai_api_key_here
+NEXTAUTH_SECRET=your_nextauth_secret_here
+NEXTAUTH_URL=https://your-app.vercel.app
+```
+
+### 4. Deploy
+Click "Deploy" - Vercel will automatically:
+- Install dependencies
+- Generate Prisma client
+- Build the Next.js application
+- Deploy to production
+
+The project includes a `vercel.json` configuration file that handles the Prisma generation automatically during the build process.
+
+### Troubleshooting
+If you encounter any issues during deployment:
+1. Make sure all environment variables are set correctly
+2. Check that the `DATABASE_URL` is properly formatted
+3. Ensure the Prisma schema is valid
+4. Verify that all dependencies are properly installed
+
 ## 🤖 Powered by Z.ai
 
 This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
