@@ -19,14 +19,190 @@ model User {
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Relations
+  properties Property[]
+  valuations Valuation[]
+  reports    Report[]
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Property {
+  id              String   @id @default(cuid())
+  address         String
+  district        String
+  city            String
+  province        String
+  postalCode      String?
+  coordinates     String?  // JSON string with lat, lng
+  landSize        Float    // in m²
+  buildingSize    Float?   // in m²
+  assetType       AssetType
+  zoning          String?
+  landUse         String?
+  ownershipStatus OwnershipStatus
+  certificateNumber String?
+  yearBuilt       Int?
+  condition       PropertyCondition?
+  description     String?
+  features        String?  // JSON string for additional features
+  images          String?  // JSON array of image URLs
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  userId          String
+  user            User         @relation(fields: [userId], references: [id])
+  valuations      Valuation[]
+  legalChecks     LegalCheck[]
+  comparables     ComparableProperty[]
+  financialModels FinancialModel[]
+}
+
+model Valuation {
+  id                  String   @id @default(cuid())
+  estimatedValue      Float    // in IDR
+  valuePerSqm         Float    // in IDR per m²
+  confidenceScore     Float    // 0-1
+  valuationMethod     ValuationMethod
+  valuationDate       DateTime @default(now())
+  marketTrends        String?  // JSON string with trend data
+  comparableAnalysis  String?  // JSON string with comparable properties
+  riskFactors         String?  // JSON string with risk assessment
+  strategicValue      String?  // JSON string with strategic insights
+  notes               String?
+  
+  // Relations
+  propertyId String
+  property   Property   @relation(fields: [propertyId], references: [id])
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
+  
+  @@map("valuations")
+}
+
+model LegalCheck {
+  id                    String           @id @default(cuid())
+  ownershipVerified     Boolean          @default(false)
+  certificateValid      Boolean          @default(false)
+  zoningCompliant       Boolean          @default(false)
+  landUsePermitted      Boolean          @default(false)
+  encumbrances          String?          // JSON string with encumbrance details
+  disputes              String?          // JSON string with dispute information
+  restrictions          String?          // JSON string with usage restrictions
+  complianceScore       Float            // 0-1
+  riskFlags             String?          // JSON string with risk flags
+  verificationDate      DateTime         @default(now())
+  notes                 String?
+  
+  // Relations
+  propertyId String
+  property   Property   @relation(fields: [propertyId], references: [id])
+  
+  @@map("legal_checks")
+}
+
+model ComparableProperty {
+  id              String   @id @default(cuid())
+  sourceId        String?  // ID from external data source
+  address         String
+  district        String
+  city            String
+  landSize        Float
+  buildingSize    Float?
+  assetType       AssetType
+  transactionDate DateTime?
+  transactionPrice Float?
+  pricePerSqm     Float?
+  distance        Float?   // in meters from subject property
+  similarityScore Float    // 0-1
+  dataSource      String   // e.g., "Jakarta Satu", "Sentuh Tanahku"
+  rawData         String?  // JSON string with original data
+  
+  // Relations
+  propertyId String
+  property   Property   @relation(fields: [propertyId], references: [id])
+  
+  @@map("comparable_properties")
+}
+
+model FinancialModel {
+  id                    String   @id @default(cuid())
+  loanToValue           Float    // LTV ratio
+  debtServiceCoverage   Float?   // DSCR ratio
+  estimatedRoi          Float?   // Estimated ROI
+  cashFlow              Float?   // Annual cash flow
+  capRate               Float?   // Capitalization rate
+  stressTestResults     String?  // JSON string with stress test data
+  scenarioAnalysis      String?  // JSON string with different scenarios
+  recommendedLoanAmount Float?
+  riskAssessment        String?  // JSON string with financial risk assessment
+  
+  // Relations
+  propertyId String
+  property   Property   @relation(fields: [propertyId], references: [id])
+  
+  @@map("financial_models")
+}
+
+model Report {
+  id          String      @id @default(cuid())
+  title       String
+  type        ReportType
+  content     String      // JSON string with report content
+  format      ReportFormat
+  generatedAt DateTime    @default(now())
+  downloadUrl String?
+  
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  
+  @@map("reports")
+}
+
+enum AssetType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  MIXED_USE
+  AGRICULTURAL
+  LAND_ONLY
+}
+
+enum OwnershipStatus {
+  CERTIFIED
+  UNDER_PROCESS
+  UNCERTIFIED
+  DISPUTED
+}
+
+enum PropertyCondition {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+  NEEDS_RENOVATION
+}
+
+enum ValuationMethod {
+  COMPARABLE_SALES
+  INCOME_APPROACH
+  COST_APPROACH
+  HYBRID
+  AI_ENHANCED
+}
+
+enum ReportType {
+  VALUATION_REPORT
+  LEGAL_COMPLIANCE
+  FINANCIAL_ANALYSIS
+  STRATEGIC_RECOMMENDATIONS
+  COMPREHENSIVE_ANALYSIS
+}
+
+enum ReportFormat {
+  PDF
+  GOOGLE_SHEETS
+  MARKDOWN
+  JSON
 }
