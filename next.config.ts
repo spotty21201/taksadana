@@ -3,22 +3,22 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  // 禁用 Next.js 热重载，由 nodemon 处理重编译
-  reactStrictMode: false,
-  webpack: (config, { dev }) => {
-    if (dev) {
-      // 禁用 webpack 的热模块替换
-      config.watchOptions = {
-        ignored: ['**/*'], // 忽略所有文件变化
-      };
+  reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+  webpack: (config, { dev, isServer }) => {
+    // Only in production build and server-side
+    if (!dev && isServer) {
+      // Handle Prisma client generation
+      config.externals = config.externals || [];
+      config.externals.push({
+        '@prisma/client': '@prisma/client'
+      });
     }
     return config;
-  },
-  eslint: {
-    // 构建时忽略ESLint错误
-    ignoreDuringBuilds: true,
   },
 };
 
