@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,21 +15,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "Taksa Dana - AI-Powered Property Valuation & Strategic Asset Intelligence",
+  description: "Advanced AI-driven property valuation platform for banks, credit institutions, and developers in Indonesia. Integrates Jakarta Satu and Sentuh Tanahku data for accurate land assessment.",
+  keywords: ["Taksa Dana", "Property Valuation", "Real Estate AI", "Jakarta Satu", "Sentuh Tanahku", "Land Assessment", "Indonesia Real Estate"],
+  authors: [{ name: "Taksa Dana Team" }],
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    title: "Taksa Dana - AI Property Valuation",
+    description: "AI-powered property valuation and strategic asset intelligence for Indonesian real estate",
+    url: "https://taksadana.ai",
+    siteName: "Taksa Dana",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: "Taksa Dana - AI Property Valuation",
+    description: "AI-powered property valuation and strategic asset intelligence for Indonesian real estate",
   },
 };
 
@@ -42,8 +43,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
